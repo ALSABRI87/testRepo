@@ -15,12 +15,17 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+Route::get('/', function (\Codedge\Updater\UpdaterManager $updater) {
+    return response()->json([
+        'verssion' => $updater->source()->getVersionInstalled(),
+        'versionAvailable' => $updater->source()->getVersionAvailable(),
+    ]);
+});
+Route::get('/new', function (\Codedge\Updater\UpdaterManager $updater) {
+    return response()->json([
+        "updater" => "new Version",
+        'verssion' => $updater->source()->getVersionInstalled(),
+        'versionAvailable' => $updater->source()->getVersionAvailable(),
     ]);
 });
 
