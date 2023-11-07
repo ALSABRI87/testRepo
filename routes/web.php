@@ -16,18 +16,28 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function (\Codedge\Updater\UpdaterManager $updater) {
+    if ($updater->source()->isNewVersionAvailable()) {
+
+        // Get the current installed version
+        echo $updater->source()->getVersionInstalled();
+
+        // Get the new version available
+        $versionAvailable = $updater->source()->getVersionAvailable();
+
+        // Create a release
+        $release = $updater->source()->fetch($versionAvailable);
+
+        // Run the update process
+        $updater->source()->update($release);
+    } else {
+        echo "No new version available.";
+    }
     return response()->json([
         'verssion' => $updater->source()->getVersionInstalled(),
         'versionAvailable' => $updater->source()->getVersionAvailable(),
     ]);
 });
-Route::get('/new', function (\Codedge\Updater\UpdaterManager $updater) {
-    return response()->json([
-        "updater" => "new Version",
-        'verssion' => $updater->source()->getVersionInstalled(),
-        'versionAvailable' => $updater->source()->getVersionAvailable(),
-    ]);
-});
+
 
 Route::middleware([
     'auth:sanctum',

@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/', function (\Codedge\Updater\UpdaterManager $updater) {
+    return response()->json([
+        'verssion' => $updater->source()->getVersionInstalled(),
+        'versionAvailable' => $updater->source()->getVersionAvailable(),
+    ]);
+});
